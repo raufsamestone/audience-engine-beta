@@ -2,7 +2,6 @@
   "name": "audience-engine",
   "version": "0.1.0",
   "private": true,
-
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -16,14 +15,17 @@
     "cors": "^2.8.5",
     "eslint": "8.33.0",
     "eslint-config-next": "13.1.6",
+    "fs": "^0.0.1-security",
     "next": "13.1.6",
     "postcss": "^8.4.21",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "reactflow": "^11.5.6",
     "rollup": "^3.16.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^7.0.2",
+    "swr": "^2.0.3",
     "tailwindcss": "^3.2.4"
   }
 }

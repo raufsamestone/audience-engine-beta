@@ -2,6 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "@next/font/google";
 import styles from "@/styles/Home.module.css";
+import AudienceData from "@/components/auidience";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,22 +17,7 @@ export default function Home() {
       </Head>
 
       <main>
-        <div>{/* <TaskTracker /> */}</div>
-        {/* <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>src/pages/index.js</code>
-          </p>
-          <div>
-            <a
-              href="https://monotalic.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By Monotalic
-            </a>
-          </div>
-        </div> */}
+        <div>This is Dashboard</div>
       </main>
     </>
   );

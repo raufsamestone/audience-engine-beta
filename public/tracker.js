@@ -21,7 +21,7 @@
     })();
     var n;
     (n = e),
-      fetch("http://localhost:3001/api/collect", {
+      fetch("http://localhost:3000/api/collect", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(n),
