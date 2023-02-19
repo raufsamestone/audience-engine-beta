@@ -1,12 +1,11 @@
 import audiences from "../../../data/audiences.json";
-import fs from 'fs';
-
+import fs from "fs";
 
 export default function handler(req, res) {
   const { id } = req.query;
 
   // find index of the audience to delete in the JSON file
-  const index = audiences.findIndex(audience => audience.id === Number(id));
+  const index = audiences.findIndex((audience) => audience.id === id);
 
   if (index === -1) {
     return res
@@ -15,7 +14,7 @@ export default function handler(req, res) {
   }
 
   // remove the audience from the JSON file
-  audiences.splice(index, 1);
+  audiences.splice(index, 1)[0];
 
   // // Write updated data to JSON file
   fs.writeFileSync("./data/audiences.json", JSON.stringify(audiences));

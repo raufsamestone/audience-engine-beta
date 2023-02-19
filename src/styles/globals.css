@@ -124,7 +124,7 @@ a {
 }
 
 .customNode:before {
-  content: '';
+  content: "";
   position: absolute;
   top: -10px;
   left: 50%;
@@ -163,4 +163,10 @@ div.targetHandle {
   transform: none;
   border: none;
   opacity: 0;
+}
+
+.delete-buttons {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
 }
