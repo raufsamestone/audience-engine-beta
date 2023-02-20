@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import AdvancedFilter from "../../components/advancedFilter";
 
 const Audience = () => {
   const [audience, setAudience] = useState(null);
@@ -55,6 +56,8 @@ const Audience = () => {
         <p className="text-lg mb-2">Bounce Rate: {audience.bounceRate}</p>
         {audience.rfmScore ? (
           <div>
+            <AdvancedFilter data={audience.rfmScore} />
+
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>

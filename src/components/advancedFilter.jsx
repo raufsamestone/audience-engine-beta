@@ -1,37 +1,6 @@
 import { useState } from "react";
 
-const data = [
-  {
-    id: 1,
-    name: "John Doe",
-    jobTitle: "Software Engineer",
-    department: "Engineering",
-    salary: 80000,
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    jobTitle: "Product Manager",
-    department: "Product",
-    salary: 100000,
-  },
-  {
-    id: 3,
-    name: "Mike Johnson",
-    jobTitle: "Sales Manager",
-    department: "Sales",
-    salary: 90000,
-  },
-  {
-    id: 4,
-    name: "Sarah Lee",
-    jobTitle: "HR Manager",
-    department: "HR",
-    salary: 95000,
-  },
-];
-
-function AdvancedFilter() {
+function AdvancedFilter({ data }) {
   const [field, setField] = useState("");
   const [operator, setOperator] = useState("IS");
   const [value, setValue] = useState("");
@@ -62,6 +31,7 @@ function AdvancedFilter() {
           return true;
       }
     });
+
     setFilteredData(filtered);
   }
 
@@ -70,7 +40,7 @@ function AdvancedFilter() {
       <div>
         <select value={field} onChange={handleFieldChange}>
           <option value="">Select a field</option>
-          {Object.keys(data[0]).map((key) => (
+          {Object?.keys(data[0]).map((key) => (
             <option key={key} value={key}>
               {key}
             </option>
@@ -87,13 +57,13 @@ function AdvancedFilter() {
       <table>
         <thead>
           <tr>
-            {Object.keys(data[0]).map((key) => (
+            {Object?.keys(data[0]).map((key) => (
               <th key={key}>{key}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {filteredData.map((item) => (
+          {filteredData?.map((item) => (
             <tr key={item.id}>
               {Object.values(item).map((value) => (
                 <td key={value}>{value}</td>
