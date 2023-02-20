@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import AdvancedFilter from "./advancedFilter";
 //import AudienceInsight from "./AudienceInsight";
 //import useSWR from "swr";
 // import { trackPageView, trackClick } from "../utils/tracker";
@@ -179,8 +180,8 @@ export default function Audience() {
           </div>
         )}
       </div>
-
       <div className="grid gr gap-4 mt-8">
+        <AdvancedFilter />
         {audienceData.length <= 0 ? audienceListWarning : audienceList}
       </div>
     </div>
