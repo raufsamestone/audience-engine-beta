@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@next/font": "13.1.6",
+    "@supabase/supabase-js": "^2.8.0",
     "@tensorflow/tfjs-node": "^4.2.0",
     "autoprefixer": "^10.4.13",
     "cors": "^2.8.5",
