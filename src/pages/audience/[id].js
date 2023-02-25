@@ -132,8 +132,9 @@ const Audience = () => {
           <p className="text-md mb-2 ">{audience[0].description}</p>
           <p className="text-sm mb-2 text-gray-500">{audience[0].id}</p>
           <p className="text-sm mb-2 text-gray-500">{audience[0].created_at}</p>
-          {/* <DataTable data={groupedData} /> */}{" "}
-          {/* <ThisTable data={groupedData} /> */}
+          <br />
+          {/* <DataTable data={groupedData} /> */}
+          {/* <ThisTable data={metrics} /> */}
           <TremorTable data={metrics} />
           {/* <table>
           <thead>
