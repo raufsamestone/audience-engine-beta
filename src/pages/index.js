@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Inter } from "@next/font/google";
 import styles from "@/styles/Home.module.css";
 import AudienceData from "@/components/auidience";
+import Dashboard from "@/components/dashboard";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,8 +17,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <div>This is Dashboard</div>
+      <main className="m-5">
+        <Dashboard />
       </main>
     </>
   );

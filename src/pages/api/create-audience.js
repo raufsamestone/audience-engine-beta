@@ -1,32 +1,30 @@
-import fs from "fs";
-import { v4 as uuidv4 } from "uuid";
+import { createClient } from "@supabase/supabase-js";
 
-export default (req, res) => {
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_KEY
+);
+
+export default async (req, res) => {
   if (req.method === "POST") {
-    const { name, description, visitors, sessionTime, bounceRate, rfmScore } =
-      req.body;
+    const { name, description, user_id } = req.body;
+    console.log(req.body);
 
-    // Read existing data from JSON file
-    const data = JSON.parse(fs.readFileSync("./data/audiences.json"));
-    const uniqueId = uuidv4();
-
-    // Add new audience to data object
-    const newAudience = {
-      id: uniqueId,
-      createdAt: new Date(),
+    // Insert new audience to database
+    // const { user } = supabase.auth.session();
+    const { data, error } = await supabase.from("audiences").insert({
+      created_at: new Date(),
       description,
       name,
-      visitors,
-      sessionTime,
-      bounceRate,
-      rfmScore,
-    };
-    data.push(newAudience);
+      user_id: user_id,
+    });
 
-    console.log(newAudience);
+    if (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Server error" });
+    }
 
-    // Write updated data to JSON file
-    fs.writeFileSync("./data/audiences.json", JSON.stringify(data));
+    console.log(data);
 
     res.status(200).json({ success: true });
   } else {

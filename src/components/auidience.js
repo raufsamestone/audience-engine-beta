@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 
 //import AudienceInsight from "./AudienceInsight";
 //import useSWR from "swr";
@@ -8,14 +10,33 @@ import { useRouter } from "next/router";
 export default function Audience() {
   const [audienceData, setAudienceData] = useState([]);
   const [selectedAudiences, setSelectedAudiences] = useState([]);
+  const supabase = useSupabaseClient();
+  const session = useSession();
+  const user = session.user;
+
   const router = useRouter();
 
+  // useEffect(() => {
+  //   fetch("/api/all-audiences")
+  //     .then((response) => response.json())
+  //     .then((data) => setAudienceData(data))
+  //     .catch((error) => console.error(error));
+  // }, []);
+
   useEffect(() => {
-    fetch("/api/all-audiences")
-      .then((response) => response.json())
-      .then((data) => setAudienceData(data))
-      .catch((error) => console.error(error));
-  }, []);
+    async function fetchAudiences() {
+      const { data, error } = await supabase
+        .from("audiences")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (error) console.log("Error fetching audiences:", error.message);
+      else setAudienceData(data);
+    }
+
+    fetchAudiences();
+  }, [user]);
 
   const handleAudienceClick = (id) => {
     const selectedAudience = audienceData.find(
@@ -40,6 +61,7 @@ export default function Audience() {
 
   const handleDeleteSelectedClick = async () => {
     const idsToDelete = selectedAudiences.map((audience) => audience.id);
+    console.log(idsToDelete);
     const response = await fetch(`/api/delete-audiences?ids=${idsToDelete}`, {
       method: "DELETE",
     });
@@ -84,7 +106,8 @@ export default function Audience() {
       </div>
 
       <p className="text-gray-900 mt-2 text-xs">
-        Audience ID: {audience.id} | Created At:{audience.createdAt}
+        Audience ID: {audience.id} | Created At:
+        {audience.created_at}
       </p>
 
       <input
@@ -111,7 +134,7 @@ export default function Audience() {
           </h2>
         </div>
         <div className="mt-5 flex lg:mt-0 lg:ml-4 ">
-          <a href="/upload">
+          <Link href="/upload">
             <span className="ml-3 block">
               <button
                 onClick={() => handleSelectAllClick()}
@@ -121,8 +144,8 @@ export default function Audience() {
                 Upload a new audience
               </button>
             </span>
-          </a>
-          <a href="/create">
+          </Link>
+          <Link href="/create">
             <span className="ml-3 block">
               <button
                 onClick={() => handleSelectAllClick()}
@@ -132,7 +155,7 @@ export default function Audience() {
                 Create
               </button>
             </span>
-          </a>
+          </Link>
         </div>
         <br />
         {selectedAudiences.length > 0 && (
