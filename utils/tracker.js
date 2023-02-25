@@ -1,5 +1,4 @@
-const endpoint = "https://lj8gp3.sse.codesandbox.io/api/collect";
-
+const endpoint = "https://h6e152-3000.preview.csb.app/api/collect";
 function getDeviceType() {
   return /Mobi|Android/i.test(navigator.userAgent) ? "mobile" : "desktop";
 }
@@ -39,11 +38,10 @@ function generateDeviceFingerprint() {
     screenWidth: window.screen.width,
     screenHeight: window.screen.height,
     platform: window.navigator.platform,
-    language: window.navigator.language
+    language: window.navigator.language,
   };
   const fingerprintString = JSON.stringify(fingerprint);
   const hash = sha256(fingerprintString);
-  console.log(hash);
   return hash;
 }
 
@@ -55,7 +53,7 @@ function generateSessionId() {
   return sessionId;
 }
 
-const sessionId = generateSessionId();
+const session_id = generateSessionId();
 
 function getBrowser() {
   const userAgent = navigator.userAgent;
@@ -130,7 +128,7 @@ function trackDeadClicks() {
       sendEvent("dead_click", {
         tag: elem.tagName,
         x: event.clientX,
-        y: event.clientY
+        y: event.clientY,
       });
     }
   });
@@ -155,11 +153,14 @@ const language = getLanguage();
 const utmParams = getUTMParams();
 const screen = getScreenSize();
 const referrer = getReferrer();
+const audience_id = "";
 
-function sendEvent(eventType, eventData, isConversion) {
+function sendEvent(audience_id, eventType, eventData, isConversion) {
   const deviceType = getDeviceType();
   const browser = getBrowser();
+
   const event = {
+    audience_id,
     eventType,
     eventData: eventData ? eventData : {}, // Check if eventData is provided
     isConversion: isConversion ? isConversion : false, // Default isConversion to false
@@ -169,14 +170,14 @@ function sendEvent(eventType, eventData, isConversion) {
     screen,
     utmParams,
     referrer,
-    sessionId,
-    timestamp: new Date().toISOString()
+    session_id,
+    timestamp: new Date().toISOString(),
   };
 
   fetch(endpoint, {
     method: "POST",
     body: JSON.stringify(event),
-    headers: { "Content-Type": "application/json" }
+    headers: { "Content-Type": "application/json" },
   });
 }
 
@@ -192,9 +193,14 @@ function sendProductViewEvent(productId) {
   sendEvent("product_view", { productId });
 }
 
-function sendCustomEvent(eventData, eventValue, isConversion = false) {
+function sendCustomEvent(
+  audience_id,
+  eventData,
+  eventValue,
+  isConversion = false
+) {
   // Use default parameter for isConversion
-  sendEvent("custom", { eventData, eventValue }, isConversion);
+  sendEvent(audience_id, "custom", { eventData, eventValue }, isConversion);
 }
 
 if (!window.ae) {

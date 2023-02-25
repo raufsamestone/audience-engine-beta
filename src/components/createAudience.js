@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 
 const CreateAudience = () => {
   const router = useRouter();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [visitors, setVisitors] = useState(0);
-  const [sessionTime, setSessionTime] = useState("");
-  const [bounceRate, setBounceRate] = useState("");
+
+  const supabase = useSupabaseClient();
+  const session = useSession();
+  const user = session.user;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,9 +21,7 @@ const CreateAudience = () => {
       body: JSON.stringify({
         name,
         description,
-        visitors,
-        sessionTime,
-        bounceRate,
+        user_id: user.id,
       }),
     });
     const data = await res.json();
@@ -46,27 +46,6 @@ const CreateAudience = () => {
         onChange={(e) => setDescription(e.target.value)}
         className="p-2 border rounded"
         placeholder="Audience Description"
-      />
-      <input
-        type="number"
-        value={visitors}
-        onChange={(e) => setVisitors(e.target.value)}
-        className="p-2 border rounded"
-        placeholder="Visitors"
-      />
-      <input
-        type="text"
-        value={sessionTime}
-        onChange={(e) => setSessionTime(e.target.value)}
-        className="p-2 border rounded"
-        placeholder="Session Time"
-      />
-      <input
-        type="text"
-        value={bounceRate}
-        onChange={(e) => setBounceRate(e.target.value)}
-        className="p-2 border rounded"
-        placeholder="Bounce Rate"
       />
       <button
         type="submit"

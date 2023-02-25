@@ -11,8 +11,14 @@
   },
   "dependencies": {
     "@next/font": "13.1.6",
+    "@supabase/auth-helpers-nextjs": "^0.5.4",
+    "@supabase/auth-helpers-react": "^0.3.1",
+    "@supabase/auth-ui-react": "^0.2.8",
+    "@supabase/supabase-js": "^2.8.0",
     "@tensorflow/tfjs-node": "^4.2.0",
+    "@tremor/react": "^1.8.0",
     "autoprefixer": "^10.4.13",
+    "collect.js": "^4.34.3",
     "cors": "^2.8.5",
     "csv-parser": "^3.0.0",
     "eslint": "8.33.0",
@@ -30,6 +36,8 @@
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^7.0.2",
+    "rsuite": "^5.27.0",
+    "rsuite-table": "^5.8.2",
     "swr": "^2.0.3",
     "tailwindcss": "^3.2.4",
     "uuid": "^9.0.0"

@@ -186,5 +186,35 @@
     "visitors": 0,
     "sessionTime": "asd",
     "bounceRate": "asdasdasd"
+  },
+  {
+    "id": "a4e5dd49-f606-4939-98d3-98ca3e9b8a8e",
+    "createdAt": "2023-02-22T23:16:08.540Z",
+    "description": "asdasd",
+    "name": "asdasd",
+    "visitors": 0,
+    "sessionTime": "",
+    "bounceRate": ""
+  },
+  {
+    "id": "82bbb7b9-d3b2-45b4-9f8f-0cb7aee93e28",
+    "createdAt": "2023-02-22T23:16:18.042Z",
+    "description": "",
+    "name": "This is new audience",
+    "visitors": 0,
+    "sessionTime": "",
+    "bounceRate": ""
+  },
+  {
+    "id": "cc54e1c8-d374-440b-99ac-211241e24f78",
+    "createdAt": "2023-02-22T23:45:46.738Z",
+    "description": "yes 4",
+    "name": "this is 4"
+  },
+  {
+    "id": "cb5557e8-e8e5-4c1c-8948-314122ec843d",
+    "createdAt": "2023-02-23T05:36:27.890Z",
+    "description": "asdasd",
+    "name": "Baris"
   }
 ]

@@ -1,23 +1,27 @@
-import audiences from "../../../data/audiences.json";
-import fs from "fs";
+import { createClient } from "@supabase/supabase-js";
 
-export default function handler(req, res) {
-  const { id } = req.query;
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_KEY
+);
 
-  // find index of the audience to delete in the JSON file
-  const index = audiences.findIndex((audience) => audience.id === id);
+export default async (req, res) => {
+  if (req.method === "DELETE") {
+    const { id } = req.query;
 
-  if (index === -1) {
-    return res
-      .status(404)
-      .json({ message: `Audience with id ${id} not found` });
+    // Remove audience from database
+    const { data, error } = await supabase
+      .from("audiences")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Server error" });
+    }
+
+    res.status(200).json({ success: true });
+  } else {
+    res.status(405).json({ message: "Method not allowed" });
   }
-
-  // remove the audience from the JSON file
-  audiences.splice(index, 1)[0];
-
-  // // Write updated data to JSON file
-  fs.writeFileSync("./data/audiences.json", JSON.stringify(audiences));
-  // return updated audiences list
-  return res.status(200).json({ audiences });
-}
+};

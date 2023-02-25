@@ -10,9 +10,7 @@ const CreateAudience = ({ csvData, csvDataFileName }) => {
     const audienceData = {
       name: name,
       description: description,
-      visitors: "",
-      sessionTime: "",
-      bounceRate: "",
+
       rfmScore: calculateRFMScores(csvData),
     };
     const res = await fetch("/api/create-audience", {

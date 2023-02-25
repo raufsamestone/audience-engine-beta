@@ -11,9 +11,9 @@ export default async (req, res) => {
 
     // Remove audience from database
     const { data, error } = await supabase
-      .from("audiences")
+      .from("metrics")
       .select("*")
-      .eq("id", id);
+      .eq("audience_id", id);
 
     if (error) {
       console.log(error);
