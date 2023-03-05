@@ -24,10 +24,15 @@ export default async (req, res) => {
       console.log(error);
       return res.status(500).json({ message: "Server error" });
     }
-    // const AudienceName = data.map((item) => item.name);
-    const AudienceId = data.map((item) => item.id);
+
+    const audiencesWithGoals = data.filter(
+      (audience) => audience.goals !== null
+    );
+    const audienceIdsWithGoals = audiencesWithGoals.map(
+      (audience) => audience.goals
+    );
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.status(200).json({ AudienceId });
+    res.status(200).json({ audienceIdsWithGoals });
   } else {
     res.status(405).json({ message: "Method not allowed" });
   }

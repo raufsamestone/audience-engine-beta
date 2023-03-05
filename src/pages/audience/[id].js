@@ -4,6 +4,7 @@ import _ from "lodash";
 // import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
 import collect from "collect.js";
+import GoalsList from "../../components/goals";
 // import DataTable from "../../components/dataTable";
 // import ThisTable from "../../components/thisTable";
 import TremorTable from "../../components/tremorTable";
@@ -208,25 +209,6 @@ const Audience = () => {
     setGoals(newGoals);
   };
 
-  // const handleSaveGoals = async (id) => {
-  //   const cleanedGoals = _.cloneDeep(goals, (value) => {
-  //     if (_.isObject(value)) {
-  //       return _.isArray(value) ? [] : {};
-  //     }
-  //   });
-
-  //   const res = await fetch("/api/create-goal", {
-  //     method: "PUT",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       id,
-  //       // goals: cleanedGoals,
-  //     }),
-  //   });
-  // };
-
   const handleSaveGoals = async (e) => {
     e.preventDefault();
     const res = await fetch("/api/create-goal", {
@@ -260,6 +242,7 @@ const Audience = () => {
           <p className="text-md mb-2 ">{audience[0].description}</p>
           <p className="text-sm mb-2 text-gray-500">{audience[0].id}</p>
           <p className="text-sm mb-2 text-gray-500">{audience[0].created_at}</p>
+          <GoalsList goals={goals} />
           <br />
           {/* <DataTable data={groupedData} /> */}
           {/* <ThisTable data={metrics} /> */}
@@ -275,7 +258,6 @@ const Audience = () => {
                   }
                 >
                   <option value="event_type">Event Type</option>
-                  <option value="ssss">sss</option>
                   {/* Add more options here */}
                 </select>
                 <select
