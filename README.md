@@ -13,3 +13,34 @@ Here are a few examples:.
 - **Personalization:** This involves using customer data to personalize marketing messages, product recommendations, or other aspects of the customer experience. Personalization can help improve customer engagement and loyalty.
 
 - **Attribution modeling:** This involves identifying which marketing channels or touchpoints are most effective at driving conversions or other desired outcomes. Attribution modeling can be used to optimize marketing spend and better understand the customer journey.
+
+
+## Diagram
+
+```mermaid
+graph TD;
+
+subgraph "Audience Engineering"
+Audience-->Create_Audience;
+Create_Audience-->Add_Tracker_Script;
+Add_Tracker_Script-->Collect_Data;
+Add_Tracker_Script-->Send_API_Endpoint;
+end
+
+subgraph "Audience Engineering Dashboard"
+Dashboard-->View_Audience_Data;
+end
+
+subgraph "Data Warehouse"
+Data_Warehouse-->Store_Data;
+end
+
+Create_Audience((Create Audience));
+Add_Tracker_Script((Add Tracker Script));
+Collect_Data((Collect Data));
+Send_API_Endpoint((Send API Endpoint));
+View_Audience_Data((View Audience Data));
+Dashboard((Dashboard));
+Audience((Audience));
+Data_Warehouse((Data Warehouse));
+```
