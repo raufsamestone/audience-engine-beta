@@ -191,12 +191,16 @@ function sendPageViewEvent(audience_id, pageName) {
   sendEvent(audience_id, "page_view", { pageName });
 }
 
-function sendPurchaseEvent(orderId, totalValue) {
-  sendEvent("purchase", { orderId, totalValue }, true); // Set isConversion to true for purchase event
+function sendPurchaseEvent(audience_id, orderId, totalValue) {
+  sendEvent(audience_id, "purchase", { orderId, totalValue }, true); // Set isConversion to true for purchase event
 }
 
-function sendProductViewEvent(productId) {
-  sendEvent("product_view", { productId });
+function sendAddToCartEvent(audience_id, productId, totalValue) {
+  sendEvent(audience_id, "add_to_cart", { productId, totalValue }, true); // Set isConversion to true for purchase event
+}
+
+function sendProductViewEvent(audience_id, productId) {
+  sendEvent(audience_id, "product_view", { productId });
 }
 
 function sendCustomEvent(
@@ -214,6 +218,7 @@ if (!window.ae) {
   ae.productView = sendProductViewEvent;
   ae.purchaseEvent = sendPurchaseEvent;
   ae.pageViewEvent = sendPageViewEvent;
+  ae.addToCartEvent = sendAddToCartEvent;
   ae.customEvent = sendCustomEvent;
   window.ae = ae;
 }

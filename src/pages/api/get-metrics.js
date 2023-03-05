@@ -7,14 +7,18 @@ const supabase = createClient(
 
 export default async (req, res) => {
   if (req.method === "GET") {
-    const { id } = req.query;
+    const { id, event_type } = req.query;
 
-    // Remove audience from database
+    // const { data, error } = await supabase
+    //   .from("metrics")
+    //   .select("*")
+    //   .eq("audience_id", id);
     const { data, error } = await supabase
       .from("metrics")
       .select("*")
-      .eq("audience_id", id);
-
+      .eq("audience_id", id)
+      .eq("event_type", event_type);
+    // .group("session_id");
     if (error) {
       console.log(error);
       return res.status(500).json({ message: "Server error" });
