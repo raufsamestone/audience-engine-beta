@@ -12,9 +12,8 @@ export default async (req, res) => {
     // Update audience in database
     const { data, error } = await supabase
       .from("audiences")
-      .eq("id", id)
-      .update({ goals });
-
+      .update({ goals })
+      .eq("id", id);
     if (error) {
       console.log(error);
       return res.status(500).json({ message: "Server error" });

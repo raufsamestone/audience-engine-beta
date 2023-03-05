@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import _ from "lodash";
 // import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
 import collect from "collect.js";
@@ -207,8 +208,28 @@ const Audience = () => {
     setGoals(newGoals);
   };
 
-  const handleSaveGoals = async (id) => {
-    const res = await fetch("/api/create-audience", {
+  // const handleSaveGoals = async (id) => {
+  //   const cleanedGoals = _.cloneDeep(goals, (value) => {
+  //     if (_.isObject(value)) {
+  //       return _.isArray(value) ? [] : {};
+  //     }
+  //   });
+
+  //   const res = await fetch("/api/create-goal", {
+  //     method: "PUT",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       id,
+  //       // goals: cleanedGoals,
+  //     }),
+  //   });
+  // };
+
+  const handleSaveGoals = async (e) => {
+    e.preventDefault();
+    const res = await fetch("/api/create-goal", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -220,7 +241,6 @@ const Audience = () => {
     });
   };
 
-  console.log(goals);
   return (
     <>
       <Link href="/audiences">
