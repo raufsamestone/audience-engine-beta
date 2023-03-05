@@ -6,23 +6,18 @@ const supabase = createClient(
 );
 
 export default async (req, res) => {
-  if (req.method === "POST") {
-    const { name, description, user_id } = req.body;
-    // Insert new audience to database
-    // const { user } = supabase.auth.session();
-    const { data, error } = await supabase.from("audiences").insert({
-      created_at: new Date(),
-      description,
-      name,
-      user_id: user_id,
-    });
-
+  if (req.method === "PUT") {
+    const { id, goals } = req.body;
+    console.log("GOAL", id, goals);
+    // Update audience in database
+    const { data, error } = await supabase
+      .from("audiences")
+      .update({ goals })
+      .eq("id", id);
     if (error) {
       console.log(error);
       return res.status(500).json({ message: "Server error" });
     }
-
-    console.log(data);
 
     res.status(200).json({ success: true });
   } else {

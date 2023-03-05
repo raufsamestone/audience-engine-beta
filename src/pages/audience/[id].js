@@ -1,17 +1,45 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { createClient } from "@supabase/supabase-js";
+import _ from "lodash";
+// import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
 import collect from "collect.js";
-import DataTable from "../../components/dataTable";
-import ThisTable from "../../components/thisTable";
+import GoalsList from "../../components/goals";
+// import DataTable from "../../components/dataTable";
+// import ThisTable from "../../components/thisTable";
 import TremorTable from "../../components/tremorTable";
+import {
+  Card,
+  Metric,
+  BarList,
+  Text,
+  AreaChart,
+  BadgeDelta,
+  Flex,
+  ColGrid,
+} from "@tremor/react";
 //import AdvancedFilter from "../../components/advancedFilter";
 
 const Audience = () => {
   const [audience, setAudience] = useState([]);
+  const [addToCart, setAddtoCart] = useState([]);
+  const [productView, setProductView] = useState([]);
   const [groupedData, setGroupedData] = useState([]);
   const [metrics, setMetrics] = useState([]);
+  const [goals, setGoals] = useState([]);
+
+  const categories = [
+    {
+      title: "Add to Cart",
+      key: "add_to_cart",
+      metric: addToCart?.length,
+    },
+    {
+      title: "Product Views",
+      key: "product_view",
+      metric: productView?.length,
+    },
+  ];
 
   const router = useRouter();
   const { id } = router.query;
@@ -28,7 +56,6 @@ const Audience = () => {
         if (error) {
           console.log("Error fetching audience data:", error.message);
         } else {
-          setGroupedData(data);
           setAudience(data);
         }
       } catch (error) {
@@ -38,7 +65,9 @@ const Audience = () => {
 
     const fetchMetricsData = async () => {
       try {
-        const res = await fetch(`/api/get-metrics?id=${id}`);
+        const res = await fetch(
+          `/api/get-metrics?id=${id}&event_type=add_to_cart`
+        );
         const { data, error } = await res.json();
         if (error) {
           console.log("Error fetching metrics data:", error.message);
@@ -50,7 +79,41 @@ const Audience = () => {
       }
     };
 
+    const fetchMetricsAddToCart = async () => {
+      try {
+        const res = await fetch(
+          `/api/get-metrics?id=${id}&event_type=add_to_cart`
+        );
+        const { data, error } = await res.json();
+        if (error) {
+          console.log("Error fetching metrics data:", error.message);
+        } else {
+          setAddtoCart(data);
+        }
+      } catch (error) {
+        console.log("Error fetching metrics data:", error.message);
+      }
+    };
+
+    const fetchMetricsProductView = async () => {
+      try {
+        const res = await fetch(
+          `/api/get-metrics?id=${id}&event_type=product_view`
+        );
+        const { data, error } = await res.json();
+        if (error) {
+          console.log("Error fetching metrics data:", error.message);
+        } else {
+          setProductView(data);
+        }
+      } catch (error) {
+        console.log("Error fetching metrics data:", error.message);
+      }
+    };
+
     fetchAudienceData();
+    fetchMetricsProductView();
+    fetchMetricsAddToCart();
     fetchMetricsData();
   }, [id]);
   // const fetchAudience = async () => {
@@ -113,6 +176,53 @@ const Audience = () => {
     }
   };
 
+  const addToCartUnique = {};
+  addToCart.forEach((event) => {
+    const productId = event.event_data.productId;
+    if (!addToCartUnique[productId]) {
+      addToCartUnique[productId] = 1;
+    } else {
+      addToCartUnique[productId] += 1;
+    }
+  });
+
+  const convertedaddToCartUnique = Object.entries(addToCartUnique).map(
+    ([name, value]) => ({
+      name,
+      value,
+    })
+  );
+
+  const handleGoalChange = (index, key, value) => {
+    const newGoals = [...goals];
+    newGoals[index][key] = value;
+    setGoals(newGoals);
+  };
+
+  const handleAddGoal = () => {
+    setGoals([...goals, { key: "", operator: "equal", value: "" }]);
+  };
+
+  const handleRemoveGoal = (index) => {
+    const newGoals = [...goals];
+    newGoals.splice(index, 1);
+    setGoals(newGoals);
+  };
+
+  const handleSaveGoals = async (e) => {
+    e.preventDefault();
+    const res = await fetch("/api/create-goal", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id,
+        goals,
+      }),
+    });
+  };
+
   return (
     <>
       <Link href="/audiences">
@@ -132,9 +242,67 @@ const Audience = () => {
           <p className="text-md mb-2 ">{audience[0].description}</p>
           <p className="text-sm mb-2 text-gray-500">{audience[0].id}</p>
           <p className="text-sm mb-2 text-gray-500">{audience[0].created_at}</p>
-          {/* <DataTable data={groupedData} /> */}{" "}
-          {/* <ThisTable data={groupedData} /> */}
-          <TremorTable data={metrics} />
+          <GoalsList goals={goals} />
+          <br />
+          {/* <DataTable data={groupedData} /> */}
+          {/* <ThisTable data={metrics} /> */}
+          <div>
+            <h1>Edit Goals for Audience {id}</h1>
+            <button onClick={handleAddGoal}>Add Goal</button>
+            {goals.map((goal, index) => (
+              <div key={index}>
+                <select
+                  value={goal.key}
+                  onChange={(e) =>
+                    handleGoalChange(index, "key", e.target.value)
+                  }
+                >
+                  <option value="event_type">Event Type</option>
+                  {/* Add more options here */}
+                </select>
+                <select
+                  value={goal.operator}
+                  onChange={(e) =>
+                    handleGoalChange(index, "operator", e.target.value)
+                  }
+                >
+                  <option value="equal">Equal</option>
+                  <option value="not_equal">Not Equal</option>
+                  {/* Add more options here */}
+                </select>
+                <input
+                  type="text"
+                  value={goal.value}
+                  onChange={(e) =>
+                    handleGoalChange(index, "value", e.target.value)
+                  }
+                />
+                <button onClick={() => handleRemoveGoal(index)}>Remove</button>
+              </div>
+            ))}
+            <button onClick={handleSaveGoals}>Save</button>
+          </div>
+
+          <ColGrid numColsSm={2} numColsLg={3} gapX="gap-x-6" gapY="gap-y-6">
+            {categories.map((item) => (
+              <Card key={item.title} className="mb-5">
+                <Flex alignItems="items-start">
+                  <Text>{item.title}</Text>
+                </Flex>
+                <Flex
+                  justifyContent="justify-start"
+                  alignItems="items-baseline"
+                  spaceX="space-x-3"
+                  truncate={true}
+                >
+                  <Metric>{item.metric}</Metric>
+                </Flex>
+              </Card>
+            ))}
+          </ColGrid>
+
+          <BarList data={convertedaddToCartUnique} marginTop="mt-2" />
+          {/* <TremorTable data={metrics} /> */}
           {/* <table>
           <thead>
             <tr>
@@ -229,6 +397,7 @@ const Audience = () => {
             </table>
           </div>
         ) : null} */}
+
           {audience.length > 0 && (
             <button
               onClick={() => handleDelete(audience[0].id)}

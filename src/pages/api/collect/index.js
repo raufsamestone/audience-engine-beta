@@ -15,8 +15,6 @@ export default async (req, res) => {
 
   const data = req.body;
 
-  console.log("Received tracking data:", data);
-
   const event = {
     audience_id: data.audience_id,
     event_type: data.eventType,
@@ -42,7 +40,7 @@ export default async (req, res) => {
 
   await supabase.from("metrics").insert([event]);
 
-  console.log("Received tracking data:", [event]);
+  console.log("Received tracking data and recorded successfully:", [event]);
 
   return res.status(200).json({ message: "Tracking data received" });
 };

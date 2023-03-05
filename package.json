@@ -10,6 +10,7 @@
     "build:tracker": "rollup -c ./rollup.config.js"
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.16",
     "@next/font": "13.1.6",
     "@supabase/auth-helpers-nextjs": "^0.5.4",
     "@supabase/auth-helpers-react": "^0.3.1",
@@ -25,6 +26,7 @@
     "eslint-config-next": "13.1.6",
     "fs": "^0.0.1-security",
     "kmeans-js": "^0.1.2",
+    "lodash": "^4.17.21",
     "next": "13.1.6",
     "papaparse": "^5.3.2",
     "postcss": "^8.4.21",

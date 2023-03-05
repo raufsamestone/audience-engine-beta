@@ -7,24 +7,18 @@ const supabase = createClient(
 
 export default async (req, res) => {
   if (req.method === "GET") {
-    const { id, event_type } = req.query;
+    const { id } = req.query;
 
-    // const { data, error } = await supabase
-    //   .from("metrics")
-    //   .select("*")
-    //   .eq("audience_id", id);
     const { data, error } = await supabase
-      .from("metrics")
-      .select("*")
-      .eq("audience_id", id)
-      .eq("event_type", event_type);
-    // .group("session_id");
+      .from("audiences")
+      .select("goals")
+      .eq("id", id);
+
     if (error) {
       console.log(error);
       return res.status(500).json({ message: "Server error" });
     }
-
-    res.status(200).json({ data });
+    res.status(200).json({ goals: data[0].goals });
   } else {
     res.status(405).json({ message: "Method not allowed" });
   }

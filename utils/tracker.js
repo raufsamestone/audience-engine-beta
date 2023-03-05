@@ -1,4 +1,5 @@
 const endpoint = "https://h6e152-3000.preview.csb.app/api/collect";
+
 function getDeviceType() {
   return /Mobi|Android/i.test(navigator.userAgent) ? "mobile" : "desktop";
 }
@@ -153,14 +154,19 @@ const language = getLanguage();
 const utmParams = getUTMParams();
 const screen = getScreenSize();
 const referrer = getReferrer();
-const audience_id = "";
 
 function sendEvent(audience_id, eventType, eventData, isConversion) {
   const deviceType = getDeviceType();
   const browser = getBrowser();
 
+  const script = document.querySelector("script[data-audience-id]");
+
+  if (!script) return;
+  const attr = script.getAttribute.bind(script);
+  const audience_id_from_script = attr("data-audience-id");
+
   const event = {
-    audience_id,
+    audience_id: audience_id ? audience_id_from_script : "null",
     eventType,
     eventData: eventData ? eventData : {}, // Check if eventData is provided
     isConversion: isConversion ? isConversion : false, // Default isConversion to false
@@ -181,16 +187,20 @@ function sendEvent(audience_id, eventType, eventData, isConversion) {
   });
 }
 
-function sendPageViewEvent(pageName) {
-  sendEvent("page_view", { pageName });
+function sendPageViewEvent(audience_id, pageName) {
+  sendEvent(audience_id, "page_view", { pageName });
 }
 
-function sendPurchaseEvent(orderId, totalValue) {
-  sendEvent("purchase", { orderId, totalValue }, true); // Set isConversion to true for purchase event
+function sendPurchaseEvent(audience_id, orderId, totalValue) {
+  sendEvent(audience_id, "purchase", { orderId, totalValue }, true); // Set isConversion to true for purchase event
 }
 
-function sendProductViewEvent(productId) {
-  sendEvent("product_view", { productId });
+function sendAddToCartEvent(audience_id, productId, totalValue) {
+  sendEvent(audience_id, "add_to_cart", { productId, totalValue }, true); // Set isConversion to true for purchase event
+}
+
+function sendProductViewEvent(audience_id, productId) {
+  sendEvent(audience_id, "product_view", { productId });
 }
 
 function sendCustomEvent(
@@ -208,6 +218,7 @@ if (!window.ae) {
   ae.productView = sendProductViewEvent;
   ae.purchaseEvent = sendPurchaseEvent;
   ae.pageViewEvent = sendPageViewEvent;
+  ae.addToCartEvent = sendAddToCartEvent;
   ae.customEvent = sendCustomEvent;
   window.ae = ae;
 }
