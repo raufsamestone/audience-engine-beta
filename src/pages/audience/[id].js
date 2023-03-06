@@ -4,6 +4,7 @@ import _ from "lodash";
 // import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
 import collect from "collect.js";
+import ClickToCopy from "../../components/clickToCopy";
 import GoalsList from "../../components/goals";
 // import DataTable from "../../components/dataTable";
 // import ThisTable from "../../components/thisTable";
@@ -244,7 +245,10 @@ const Audience = () => {
         <div className="bg-white rounded-lg shadow-sm p-6 w-1/1  m-5 m-auto">
           <h1 className="text-3xl font-bold mb-2">{audience[0].name}</h1>
           <p className="text-md mb-2 ">{audience[0].description}</p>
-          <p className="text-sm mb-2 text-gray-500">{audience[0].id}</p>
+          <p className="text-sm mb-2 text-gray-500">
+            {audience[0].id} <ClickToCopy text={audience[0].id} />
+          </p>
+
           <p className="text-sm mb-2 text-gray-500">{audience[0].created_at}</p>
           <GoalsList goals={goals} />
           <br />
