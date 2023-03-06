@@ -226,6 +226,7 @@ const Audience = () => {
         goals,
       }),
     });
+    router.reload();
   };
 
   return (
@@ -242,7 +243,7 @@ const Audience = () => {
         </span>
       </Link>
       {audience.length > 0 && (
-        <div className="bg-white rounded-lg shadow-sm p-6 w-1/1  m-5 m-auto">
+        <div className="bg-white rounded-lg shadow-sm p-6 w-1/1 m-5 m-auto">
           <h1 className="text-3xl font-bold mb-2">{audience[0].name}</h1>
           <p className="text-md mb-2 ">{audience[0].description}</p>
           <p className="text-sm mb-2 text-gray-500">
@@ -255,11 +256,19 @@ const Audience = () => {
           {/* <DataTable data={groupedData} /> */}
           {/* <ThisTable data={metrics} /> */}
           <div>
-            <h1>Edit Goals for Audience {id}</h1>
-            <button onClick={handleAddGoal}>Add Goal</button>
+            <h1 className="text-xl font-bold mb-4">
+              Edit Goals for Audience {id}
+            </h1>
+            <button
+              className="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded"
+              onClick={handleAddGoal}
+            >
+              Add Goal
+            </button>
             {goals.map((goal, index) => (
-              <div key={index}>
+              <div key={index} className="mt-4">
                 <select
+                  className="border rounded-md px-2 py-1 mr-2"
                   value={goal.key}
                   onChange={(e) =>
                     handleGoalChange(index, "key", e.target.value)
@@ -269,6 +278,7 @@ const Audience = () => {
                   {/* Add more options here */}
                 </select>
                 <select
+                  className="border rounded-md px-2 py-1 mr-2"
                   value={goal.operator}
                   onChange={(e) =>
                     handleGoalChange(index, "operator", e.target.value)
@@ -280,15 +290,26 @@ const Audience = () => {
                 </select>
                 <input
                   type="text"
+                  className="border rounded-md px-2 py-1 mr-2"
                   value={goal.value}
                   onChange={(e) =>
                     handleGoalChange(index, "value", e.target.value)
                   }
                 />
-                <button onClick={() => handleRemoveGoal(index)}>Remove</button>
+                <button
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={() => handleRemoveGoal(index)}
+                >
+                  Remove
+                </button>
               </div>
             ))}
-            <button onClick={handleSaveGoals}>Save</button>
+            <button
+              className="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handleSaveGoals}
+            >
+              Save
+            </button>
           </div>
 
           <ColGrid numColsSm={2} numColsLg={3} gapX="gap-x-6" gapY="gap-y-6">
@@ -311,26 +332,36 @@ const Audience = () => {
 
           <BarList data={convertedaddToCartUnique} marginTop="mt-2" />
           {/* <TremorTable data={metrics} /> */}
-
-          <button
-            onClick={toggleModal}
-            type="button"
-            className="mt-10 inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-          >
-            <svg
-              className="-ml-1 mr-2 h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
+          <div className="flex content-center align-center gap-2">
+            <button
+              onClick={toggleModal}
+              type="button"
+              className="mt-10 inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
             >
-              <path
-                fill-rule="evenodd"
-                d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            Delete Audience
-          </button>
+              <svg
+                className="-ml-1 mr-2 h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Delete Audience
+            </button>
+
+            <Link href={`/edit?id=${id}`}>
+              <button
+                type="button"
+                className="mt-10 inline-flex items-center rounded-md border border-transparent bg-gray-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+              >
+                Edit
+              </button>
+            </Link>
+          </div>
 
           {isOpen && (
             <div className="fixed z-10 inset-0 overflow-y-auto">
