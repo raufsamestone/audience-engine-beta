@@ -9,14 +9,25 @@ export default async (req, res) => {
   if (req.method === "DELETE") {
     const { id } = req.query;
 
+    // Remove metrics associated with the audience from database
+    const { data: metricsData, error: metricsError } = await supabase
+      .from("metrics")
+      .delete()
+      .eq("audience_id", id);
+
+    if (metricsError) {
+      console.log(metricsError);
+      return res.status(500).json({ message: "Server error" });
+    }
+
     // Remove audience from database
-    const { data, error } = await supabase
+    const { data: audienceData, error: audienceError } = await supabase
       .from("audiences")
       .delete()
       .eq("id", id);
 
-    if (error) {
-      console.log(error);
+    if (audienceError) {
+      console.log(audienceError);
       return res.status(500).json({ message: "Server error" });
     }
 
