@@ -4,6 +4,7 @@ import _ from "lodash";
 // import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
 import collect from "collect.js";
+import ClickToCopy from "../../components/clickToCopy";
 import GoalsList from "../../components/goals";
 // import DataTable from "../../components/dataTable";
 // import ThisTable from "../../components/thisTable";
@@ -27,6 +28,9 @@ const Audience = () => {
   const [groupedData, setGroupedData] = useState([]);
   const [metrics, setMetrics] = useState([]);
   const [goals, setGoals] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleModal = () => setIsOpen(!isOpen);
 
   const categories = [
     {
@@ -163,7 +167,7 @@ const Audience = () => {
     return <div>Loading...</div>;
   }
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
     const res = await fetch(`/api/delete-audience?id=${id}`, {
       method: "DELETE",
     });
@@ -174,6 +178,7 @@ const Audience = () => {
         pathname: `/audiences`,
       });
     }
+    toggleModal();
   };
 
   const addToCartUnique = {};
@@ -221,6 +226,7 @@ const Audience = () => {
         goals,
       }),
     });
+    router.reload();
   };
 
   return (
@@ -237,21 +243,32 @@ const Audience = () => {
         </span>
       </Link>
       {audience.length > 0 && (
-        <div className="bg-white rounded-lg shadow-sm p-6 w-1/1  m-5 m-auto">
+        <div className="bg-white rounded-lg shadow-sm p-6 w-1/1 m-5 m-auto">
           <h1 className="text-3xl font-bold mb-2">{audience[0].name}</h1>
           <p className="text-md mb-2 ">{audience[0].description}</p>
-          <p className="text-sm mb-2 text-gray-500">{audience[0].id}</p>
+          <p className="text-sm mb-2 text-gray-500">
+            {audience[0].id} <ClickToCopy text={audience[0].id} />
+          </p>
+
           <p className="text-sm mb-2 text-gray-500">{audience[0].created_at}</p>
           <GoalsList goals={goals} />
           <br />
           {/* <DataTable data={groupedData} /> */}
           {/* <ThisTable data={metrics} /> */}
           <div>
-            <h1>Edit Goals for Audience {id}</h1>
-            <button onClick={handleAddGoal}>Add Goal</button>
+            <h1 className="text-xl font-bold mb-4">
+              Edit Goals for Audience {id}
+            </h1>
+            <button
+              className="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded"
+              onClick={handleAddGoal}
+            >
+              Add Goal
+            </button>
             {goals.map((goal, index) => (
-              <div key={index}>
+              <div key={index} className="mt-4">
                 <select
+                  className="border rounded-md px-2 py-1 mr-2"
                   value={goal.key}
                   onChange={(e) =>
                     handleGoalChange(index, "key", e.target.value)
@@ -261,6 +278,7 @@ const Audience = () => {
                   {/* Add more options here */}
                 </select>
                 <select
+                  className="border rounded-md px-2 py-1 mr-2"
                   value={goal.operator}
                   onChange={(e) =>
                     handleGoalChange(index, "operator", e.target.value)
@@ -272,15 +290,26 @@ const Audience = () => {
                 </select>
                 <input
                   type="text"
+                  className="border rounded-md px-2 py-1 mr-2"
                   value={goal.value}
                   onChange={(e) =>
                     handleGoalChange(index, "value", e.target.value)
                   }
                 />
-                <button onClick={() => handleRemoveGoal(index)}>Remove</button>
+                <button
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={() => handleRemoveGoal(index)}
+                >
+                  Remove
+                </button>
               </div>
             ))}
-            <button onClick={handleSaveGoals}>Save</button>
+            <button
+              className="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handleSaveGoals}
+            >
+              Save
+            </button>
           </div>
 
           <ColGrid numColsSm={2} numColsLg={3} gapX="gap-x-6" gapY="gap-y-6">
@@ -303,104 +332,9 @@ const Audience = () => {
 
           <BarList data={convertedaddToCartUnique} marginTop="mt-2" />
           {/* <TremorTable data={metrics} /> */}
-          {/* <table>
-          <thead>
-            <tr>
-              <th>Session ID</th>
-              <th>Total Events</th>
-              <th>Conversion Count</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table> */}
-          {/* {audience.rfmScore ? (
-          <div>
-           <AdvancedFilter data={audience.rfmScore} /> 
-
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Purchase Amount
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Purchase Date
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Recency
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Frequency
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Monetary
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {audience.rfmScore.map((customer) => (
-                  <tr key={customer.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {customer.name}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500">
-                        {customer.purchaseAmount}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500">
-                        {customer.purchaseDate}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500">
-                        {customer.recency}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500">
-                        {customer.frequency}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500">
-                        {customer.monetary}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : null} */}
-
-          {audience.length > 0 && (
+          <div className="flex content-center align-center gap-2">
             <button
-              onClick={() => handleDelete(audience[0].id)}
+              onClick={toggleModal}
               type="button"
               className="mt-10 inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
             >
@@ -414,11 +348,95 @@ const Audience = () => {
                   fill-rule="evenodd"
                   d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
                   clip-rule="evenodd"
-                  F
                 />
               </svg>
               Delete Audience
             </button>
+
+            <Link href={`/edit?id=${id}`}>
+              <button
+                type="button"
+                className="mt-10 inline-flex items-center rounded-md border border-transparent bg-gray-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+              >
+                Edit
+              </button>
+            </Link>
+          </div>
+
+          {isOpen && (
+            <div className="fixed z-10 inset-0 overflow-y-auto">
+              <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <div
+                  className="fixed inset-0 transition-opacity"
+                  aria-hidden="true"
+                >
+                  <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+                </div>
+
+                <div
+                  className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="modal-headline"
+                >
+                  <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div className="sm:flex sm:items-start">
+                      <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                        <svg
+                          className="h-6 w-6 text-red-600"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </div>
+
+                      <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                        <h3
+                          className="text-lg leading-6 font-medium text-gray-900"
+                          id="modal-headline"
+                        >
+                          Delete <strong> {audience[0].name} </strong>
+                        </h3>
+
+                        <div className="mt-2">
+                          <p className="text-sm text-gray-500">
+                            Are you sure you want to delete this audience? This
+                            action cannot be undone.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button
+                      type="button"
+                      className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                      onClick={() => handleDelete(id)}
+                    >
+                      Delete
+                    </button>
+
+                    <button
+                      type="button"
+                      className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+                      onClick={toggleModal}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       )}
